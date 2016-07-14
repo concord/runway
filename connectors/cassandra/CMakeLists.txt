@@ -41,7 +41,7 @@ set(BASE_FLAGS
   "-fPIC"
   "-fuse-ld=gold"
   "-Wall"
-  "-Werror"
+  # "-Werror"
   "-Wextra"
   "-Wformat"
   "-pedantic"
@@ -79,7 +79,8 @@ join ("${CXX_FLAG_LIST}" " " CMAKE_CXX_FLAGS)
 join ("${BASE_FLAGS}" " " CMAKE_C_FLAGS)
 
 set (CASSANDRA_SOURCES
-  ${PROJECT_SOURCE_DIR}/lib/CassandraCluster.cc
+  ${PROJECT_SOURCE_DIR}/lib/CassandraInserter.cc
+  ${PROJECT_SOURCE_DIR}/lib/CassandraSink.cc  
   ${PROJECT_SOURCE_DIR}/src/main.cc
   )
 
@@ -92,7 +93,7 @@ target_link_libraries(
   ${BASE_CPP_CLIENT_LIBRARIES}
   uv.a  
   cassandra_static.a
-  :libboost_context.so.1.55.0 #TODO: Dont forget to add to meta
+  :libboost_context.so.1.55.0
   folly.a
   )
 

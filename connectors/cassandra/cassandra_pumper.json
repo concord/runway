@@ -1,0 +1,19 @@
+{
+  "zookeeper_hosts": "localhost:2181",
+  "zookeeper_path": "/concord",
+  "executable_name": "./build/cassandra_pumper",
+  "compress_files": ["./build/cassandra_pumper"],
+  "computation_name": "cassandra-pumper",
+  "environment_variables": [
+    "LD_LIBRARY_PATH=/lib:/usr/local/lib:/usr/lib:/usr/lib/x86_64-linux-gnu"
+  ],
+  "executable_arguments": [
+    "--keyspace=testy",
+    "--table=emp",
+    "--contact_points=127.0.0.1",
+    "--computation_name=cassandra_sink",
+    "--input_streams=testyEmp"
+  ],
+  "mem": 512,
+  "cpus": 1.0
+}
