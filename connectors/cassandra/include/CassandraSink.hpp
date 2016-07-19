@@ -12,7 +12,7 @@ public:
   CassandraSink(const std::string &keyspace, const std::string &table,
                 const std::string &contactPoints, const std::string &name,
                 const std::string &inputStreams,
-                const uint32_t maxAsyncInserts);
+                const uint64_t maxAsyncInserts);
   virtual ~CassandraSink() {}
 
   virtual void init(CtxPtr ctx) override;
@@ -25,13 +25,14 @@ public:
 
 private:
   void waitOnAllFutures();
-  const bolt::Metadata buildMetadata(const std::string &name,
-                                     const std::string &inputStreams) const;
+  static std::set<bolt::Metadata::StreamGrouping>
+  buildInputStreams(const std::string &keyspace, const std::string &table,
+                    std::string inputStreams);
 
   uint64_t failedCallbacks_{0};
   const bolt::Metadata thisMetadata_;
   CassandraInserter cluster_;
   std::vector<folly::Future<bool>> asyncInserts_;
-  const uint32_t maxAsyncInserts_;
+  const uint64_t maxAsyncInserts_;
 };
 }

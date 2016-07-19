@@ -12,8 +12,9 @@ CassandraSink::CassandraSink(const std::string &keyspace,
                              const std::string &contactPoints,
                              const std::string &name,
                              const std::string &inputStreams,
-                             const uint32_t maxAsyncInserts)
-    : thisMetadata_(buildMetadata(name, inputStreams)),
+                             const uint64_t maxAsyncInserts)
+    : thisMetadata_(bolt::Metadata(
+          name, buildInputStreams(keyspace, table, inputStreams))),
       cluster_(keyspace, table, contactPoints),
       maxAsyncInserts_(maxAsyncInserts) {
   asyncInserts_.reserve(maxAsyncInserts);
@@ -39,26 +40,24 @@ void CassandraSink::destroy() {
 }
 
 void CassandraSink::processRecord(CtxPtr ctx, bolt::FrameworkRecord &&r) {
-  // We have reached point where we will not continue to push to cassandra
+  // If true stop creating asynchronous requests, wait for all to finish
   if (asyncInserts_.size() == maxAsyncInserts_) {
     waitOnAllFutures();
   }
 
-  // Parse request, inserting resultant future into queue
-  const folly::dynamic request = folly::parseJson(r.value);
-  if (request.isObject()) {
-    const folly::dynamic values = request["values"];
-    if (values.isObject()) {
-      folly::Future<bool> ins =
-          cluster_.insert([&values](const std::string &col_name) {
-            folly::dynamic data = values[col_name];
-            return data.c_str();
-          });
-      asyncInserts_.push_back(std::move(ins));
-      return;
-    }
+  try {
+    // Parse request, inserting resultant future into queue
+    const folly::dynamic values = folly::parseJson(r.value)["values"];
+    folly::Future<bool> ins =
+        cluster_.insert([&values](const std::string &col_name) {
+          const folly::dynamic &item = values[col_name];
+          return item.isString() ? folly::sformat("'{}'", item.asString())
+                                 : item.asString();
+        });
+    asyncInserts_.push_back(std::move(ins));
+  } catch (const std::exception &e) {
+    LOG(ERROR) << "Error during JSON parsing: " << e.what();
   }
-  LOG(ERROR) << "Input stream request doesn't adhere to expected protocol";
 }
 
 void CassandraSink::waitOnAllFutures() {
@@ -78,18 +77,22 @@ void CassandraSink::waitOnAllFutures() {
   asyncInserts_.clear();
 }
 
-const bolt::Metadata CassandraSink::buildMetadata(const std::string &name,
-                                   const std::string &inputStreams) const {
+std::set<bolt::Metadata::StreamGrouping>
+CassandraSink::buildInputStreams(const std::string &keyspace,
+                                 const std::string &table,
+                                 std::string inputStreams) {
   using StreamGpg = bolt::Metadata::StreamGrouping;
+  if (inputStreams.empty()) {
+    inputStreams = folly::sformat("{}.{}", keyspace, table);
+  }
   std::set<StreamGpg> istreams;
   std::vector<std::string> names;
   folly::split(",", inputStreams, names);
-  // TODO: The names array has a len of 1 if inputStreams==""
   std::transform(names.begin(), names.end(),
                  std::inserter(istreams, istreams.begin()),
                  [](const std::string s) {
                    return StreamGpg(s, bolt::Grouping::ROUND_ROBIN);
                  });
-  return bolt::Metadata(name, istreams);
+  return istreams;
 }
 }

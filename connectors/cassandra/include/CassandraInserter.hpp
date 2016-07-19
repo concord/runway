@@ -11,21 +11,19 @@ public:
                     const std::string &contactPoints);
   CassandraInserter(const CassandraInserter &) = delete;
   CassandraInserter &operator=(const CassandraInserter &) = delete;
-  // TODO: Implement move assignment and copy operations
-  // CassandraInserter(CassandraInserter &&other);
-  // CassandraInserter &operator=(const CassandraInserter &&rhs);
+  CassandraInserter(CassandraInserter &&other);
+  // TODO: Implement this method
+  CassandraInserter &operator=(const CassandraInserter &&rhs) = delete;
   virtual ~CassandraInserter();
 
   folly::Future<folly::Optional<std::string>> connectSession();
   void disconnectSession();
 
   template <typename Func> folly::Future<bool> insert(Func &&insertCallback) {
-    // Example:
-    // INSERT INTO tablename (COL1, ..., COLN) VALUES (data1, ... , dataN);
-    //
-    std::vector<const char *> values;
+    // NOTE: .asString() returns fbstring, no need to convert to std::string
+    std::vector<folly::fbstring> values;
     for (const auto &col : tableSchema_) {
-      values.push_back(insertCallback(col));
+      values.emplace_back(std::forward<Func>(insertCallback)(col));
     }
 
     const std::string query = folly::sformat(
@@ -38,14 +36,14 @@ public:
 
 private:
   folly::Optional<std::string> setSchemaMetadata();
+  folly::Optional<std::vector<std::string>> queryTableMetadata();
   folly::Future<bool> registerCallback(CassFuture *ft);
   static void databaseEffectCallback(CassFuture *ft, void *data);
-  CassCluster *createCluster(const std::string &contactPoints);
 
   const std::string keyspace_;
   const std::string tableName_;
   std::vector<std::string> tableSchema_;
   CassSession *session_{cass_session_new()};
-  CassCluster *cluster_;
+  CassCluster *cluster_{cass_cluster_new()};
 };
 }

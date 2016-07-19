@@ -41,7 +41,7 @@ set(BASE_FLAGS
   "-fPIC"
   "-fuse-ld=gold"
   "-Wall"
-  # "-Werror"
+  "-Werror"
   "-Wextra"
   "-Wformat"
   "-pedantic"

@@ -12,7 +12,8 @@
     "--table=emp",
     "--contact_points=127.0.0.1",
     "--computation_name=cassandra_sink",
-    "--input_streams=testyEmp"
+    "--input_streams=employees",
+    "--max_async_inserts=10"
   ],
   "mem": 512,
   "cpus": 1.0
