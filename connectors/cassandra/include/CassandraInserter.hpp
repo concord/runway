@@ -19,7 +19,8 @@ public:
   folly::Future<folly::Optional<std::string>> connectSession();
   void disconnectSession();
 
-  template <typename Func> folly::Future<bool> insert(Func &&insertCallback) {
+  template <typename Func>
+  folly::Future<folly::Unit> insert(Func &&insertCallback) {
     // NOTE: .asString() returns fbstring, no need to convert to std::string
     std::vector<folly::fbstring> values;
     for (const auto &col : tableSchema_) {
@@ -37,7 +38,7 @@ public:
 private:
   folly::Optional<std::string> setSchemaMetadata();
   folly::Optional<std::vector<std::string>> queryTableMetadata();
-  folly::Future<bool> registerCallback(CassFuture *ft);
+  folly::Future<folly::Unit> registerCallback(CassFuture *ft);
   static void databaseEffectCallback(CassFuture *ft, void *data);
 
   const std::string keyspace_;

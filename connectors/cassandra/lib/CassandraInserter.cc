@@ -40,16 +40,17 @@ CassandraInserter::~CassandraInserter() {
 
 folly::Future<folly::Optional<std::string>>
 CassandraInserter::connectSession() {
-  LOG(INFO) << "Establishing connection with Cassandra...";  
+  LOG(INFO) << "Establishing connection with Cassandra...";
   return registerCallback(cass_session_connect(session_, cluster_))
-      .then([this](bool success) {
-        if (success) {
-          LOG(INFO) << "Successful connection established";
-          return setSchemaMetadata();
-        } else {
-          return folly::Optional<std::string>("Failed to connect to Cassandra");
-        }
-      });
+      .then([this](const folly::Try<folly::Unit> &finish)
+                -> folly::Optional<std::string> {
+                  try {
+                    finish.throwIfFailed();
+                  } catch (const std::exception &e) {
+                    return folly::Optional<std::string>(e.what());
+                  }
+                  return folly::none;
+                });
 }
 
 void CassandraInserter::disconnectSession() {
@@ -94,26 +95,30 @@ CassandraInserter::queryTableMetadata() {
   return folly::Optional<std::vector<std::string>>(md);
 }
 
-folly::Future<bool> CassandraInserter::registerCallback(CassFuture *ft) {
+folly::Future<folly::Unit> CassandraInserter::registerCallback(CassFuture *ft) {
   auto f = wrapCassFuture(ft);
-  auto promise = std::make_unique<folly::Promise<bool>>();
+  auto promise = std::make_unique<folly::Promise<folly::Unit>>();
   auto future = promise->getFuture();
   if (cass_future_set_callback(f.release(), databaseEffectCallback,
                                (void *)promise.release()) != CASS_OK) {
-    return folly::Future<bool>(false);
+    promise->setException(folly::make_exception_wrapper<std::runtime_error>(
+        "Callback failed to register"));
   }
   return future;
 }
 
 // static
 void CassandraInserter::databaseEffectCallback(CassFuture *ft, void *data) {
-  auto promise =
-      std::unique_ptr<folly::Promise<bool>>((folly::Promise<bool> *)data);
+  auto promise = std::unique_ptr<folly::Promise<folly::Unit>>(
+      (folly::Promise<folly::Unit> *)data);
   auto future = wrapCassFuture(ft);
   CHECK(cass_future_ready(future.get()) == true) << "Future must be ready here";
   const bool success = cass_future_error_code(future.get()) == CASS_OK;
-  LOG_IF(ERROR, !success) << "Asynchronous Event Error: "
-                          << cassFutureErrorString(future.get());
-  promise->setValue(success);
+  if (success) {
+    promise->setValue(folly::Unit());
+  } else {
+    promise->setException(folly::make_exception_wrapper<std::runtime_error>(
+        cassFutureErrorString(future.get())));
+  }
 }
 }

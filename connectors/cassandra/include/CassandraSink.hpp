@@ -32,7 +32,7 @@ private:
   uint64_t failedCallbacks_{0};
   const bolt::Metadata thisMetadata_;
   CassandraInserter cluster_;
-  std::vector<folly::Future<bool>> asyncInserts_;
+  std::vector<folly::Future<folly::Unit>> asyncInserts_;
   const uint64_t maxAsyncInserts_;
 };
 }
