@@ -24,7 +24,7 @@ void CassandraSink::init(CtxPtr ctx) {
   folly::Future<folly::Optional<std::string>> f = cluster_.connectSession();
   try {
     if (const folly::Optional<std::string> m = f.get(std::chrono::seconds(5))) {
-      LOG(FATAL) << "Error on Cassandra connect: " << *m;
+      LOG(FATAL) << "Failed to connect to Cassandra; reason: " << *m;
     }
   } catch (folly::TimedOut e) {
     LOG(FATAL) << "Failed to connect to Cassandra within 5s timeout";
@@ -48,7 +48,7 @@ void CassandraSink::processRecord(CtxPtr ctx, bolt::FrameworkRecord &&r) {
   try {
     // Parse request, inserting resultant future into queue
     const folly::dynamic values = folly::parseJson(r.value)["values"];
-    folly::Future<bool> ins =
+    folly::Future<folly::Unit> ins =
         cluster_.insert([&values](const std::string &col_name) {
           const folly::dynamic &item = values[col_name];
           return item.isString() ? folly::sformat("'{}'", item.asString())
@@ -63,15 +63,13 @@ void CassandraSink::processRecord(CtxPtr ctx, bolt::FrameworkRecord &&r) {
 void CassandraSink::waitOnAllFutures() {
   // Wait on all futures to complete, then clear queue
   folly::collectAll(asyncInserts_)
-      .then([this](const std::vector<folly::Try<bool>> &tries) {
+      .then([this](const std::vector<folly::Try<folly::Unit>> &tries) {
         for (const auto &t : tries) {
-          if (t.hasException()) {
-            LOG(ERROR) << "Exception detected in future: "
-                       << t.exception().what();
-            failedCallbacks_ += 1;
-          } else if (t.hasValue() && t.value() == false) {
-            failedCallbacks_ += 1;
-          }
+          const auto ex =
+              t.withException<std::runtime_error>([](const std::exception &e) {
+                LOG(ERROR) << "Exception detected post-future cb: " << e.what();
+              });
+          failedCallbacks_ += ex ? 1 : 0;
         }
       });
   asyncInserts_.clear();
