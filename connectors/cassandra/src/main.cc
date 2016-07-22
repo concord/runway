@@ -11,7 +11,7 @@ DEFINE_string(computation_name, "cassandra-sink",
 DEFINE_string(input_streams, "",
               "Comma seperated list incoming streams to listen on");
 DEFINE_uint64(max_async_inserts, 10,
-              "Maximum number of asynchrnous inserts to Cassandra cluster");
+              "Maximum number of asynchronous inserts to Cassandra cluster");
 
 int main(int argc, char *argv[]) {
   google::SetUsageMessage(
