@@ -6,3 +6,4 @@
     - compilation_tooling
     - folly
     - cassandra_client
+    - apachethrift

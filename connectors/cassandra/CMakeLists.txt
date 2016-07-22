@@ -3,7 +3,7 @@ project (concord_cassandra)
 set(VERSION 0.1.0)
 
 link_directories (
-  ${PROJECT_SOURCE_DIR}/third_party/lib
+  ${PROJECT_SOURCE_DIR}/meta/tmp/lib
   /usr/local/lib
   /usr/lib/x86_64-linux-gnu
   )
@@ -11,7 +11,7 @@ link_directories (
 include_directories (
   SYSTEM
   ${PROJECT_SOURCE_DIR}/include
-  ${PROJECT_SOURCE_DIR}/third_party/include
+  ${PROJECT_SOURCE_DIR}/meta/tmp/include
   src
   )
 
@@ -35,6 +35,7 @@ set (BASE_CPP_CLIENT_LIBRARIES
   :libunwind.so.8
   :libpthread.so.0
   :libz.so.1.2.8
+  iberty
   )
 
 set(BASE_FLAGS

@@ -1,0 +1,8 @@
+---
+
+dependencies:
+  - {
+  role: lib_uncompress,
+  library_compressed_file_dir: '{{apachethrift_dir}}',
+  library_compressed_file: '{{apachethrift}}',
+  library_url: '{{apachethrift_url}}' }
