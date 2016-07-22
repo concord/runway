@@ -24,7 +24,13 @@ DEFINE_uint64(max_async_inserts, 10,
 ```
 
 If no input streams are provided, the operator will construct a default by appending
-the given value of 'keyspace' to 'table' with a period seperating them: 'keyspace'.'table'
+the given value of 'keyspace' to 'table' with a period seperating them: 
+
+```cpp
+if (inputStreams.empty()) {
+  inputStreams = folly::sformat("{}.{}", keyspace, table);
+}
+```
 
 ### Usage
 
