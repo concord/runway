@@ -27,7 +27,7 @@ make -j$NPROCS
     
 # Build Dockerfile
 cd $PROJ_ROOT
-sudo docker build -t runway/cassandra_sink:0.4.3 .
-echo "Don't forget to push: sudo docker push runway/cassandra_sink:0.4.3"
+sudo docker build -t runway/cassandra_sink:0.4.3.1 .
+echo "Don't forget to push: sudo docker push runway/cassandra_sink:0.4.3.1"
 cd $CUR_DIR
     
