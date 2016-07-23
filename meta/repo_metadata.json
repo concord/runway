@@ -1,0 +1,12 @@
+{
+  "packages":[
+    {
+      "operator_name" : "Cassandra Sink",
+      "docker_container" : "concord/runtime_executor",
+      "supported_versions" : ["0.4.3.1"],
+      "default_cpus" : 1.0,
+      "default_mem" : 1024
+    }
+  ],
+  "schema_version" : "1.0.0"
+}
