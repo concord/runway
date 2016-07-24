@@ -2,6 +2,7 @@
   "packages":[
     {
       "operator_name" : "Cassandra Sink",
+      "docker_repository" : "concord",
       "docker_container" : "concord/runtime_executor",
       "supported_versions" : ["0.4.3.1"],
       "default_cpus" : 1.0,
