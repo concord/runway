@@ -3,7 +3,7 @@
     {
       "operator_name" : "Cassandra Sink",
       "docker_repository" : "concord",
-      "docker_container" : "concord/runtime_executor",
+      "docker_container" : "concord/runway_cassandra",
       "supported_versions" : ["0.4.3.1"],
       "default_cpus" : 1.0,
       "default_mem" : 1024
