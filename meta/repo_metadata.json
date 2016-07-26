@@ -2,6 +2,7 @@
   "packages":[
     {
       "operator_name" : "Cassandra Sink",
+      "executable_name" : "cassandra_pumper",
       "docker_repository" : "concord",
       "docker_container" : "runway_cassandra",
       "supported_versions" : ["0.4.3.1"],
