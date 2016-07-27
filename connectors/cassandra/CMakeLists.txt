@@ -4,15 +4,12 @@ set(VERSION 0.1.0)
 
 link_directories (
   ${PROJECT_SOURCE_DIR}/meta/tmp/lib
-  /usr/local/lib
-  /usr/lib/x86_64-linux-gnu
   )
 
 include_directories (
   SYSTEM
   ${PROJECT_SOURCE_DIR}/include
   ${PROJECT_SOURCE_DIR}/meta/tmp/include
-  src
   )
 
 set (BASE_CPP_CLIENT_LIBRARIES
