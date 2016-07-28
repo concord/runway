@@ -5,7 +5,7 @@
     repo='https://github.com/senior7515/librdkafka.git'
     accept_hostkey=yes
     clone=yes
-    dest='{{cache_dir}}/librdkafka'
+    dest='{{third_party_dir}}/librdkafka'
     update=yes
     recursive=yes
     version='64cd2ab'
@@ -13,17 +13,12 @@
 
 - shell:
     ./configure --CFLAGS="-O2 -DNDEBUG -fPIC" \
-    --CXXFLAGS="-O2 -DNDEBUG -fPIC" --prefix="{{third_party_dir}}"
+    --CXXFLAGS="-O2 -DNDEBUG -fPIC" --prefix="{{cache_dir}}"
   args:
-    chdir: '{{cache_dir}}/librdkafka'
-    creates: '{{cache_dir}}/librdkafka/Makefile.config'
+    chdir: '{{third_party_dir}}/librdkafka'
+    creates: '{{third_party_dir}}/librdkafka/Makefile.config'
 
-- command: make -j{{ansible_processor_vcpus}}
+- command: make -j{{ansible_processor_vcpus}} install
   args:
-    chdir: '{{cache_dir}}/librdkafka'
-    creates: '{{cache_dir}}/librdkafka/src/librdkafka.a'
-
-- command: make install
-  args:
-    chdir: '{{cache_dir}}/librdkafka'
-    creates: '{{third_party_dir}}/lib/librdkafka.a'
+    chdir: '{{third_party_dir}}/librdkafka'
+    creates: '{{cache_dir}}/lib/librdkafka.a'

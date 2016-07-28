@@ -1,0 +1,45 @@
+---
+
+- debug: msg='bootstrapping apache thrift {{third_party_dir}}/{{apachethrift_dir}}'
+
+- name: Configure apache thrift
+  shell:
+    ./configure --without-erlang \
+                --without-c_glib \
+                --without-qt4 \
+                --without-csharp \
+                --without-lua \
+                --without-perl \
+                --without-php \
+                --without-php_extension \
+                --without-haskell \
+                --without-go \
+                --without-d \
+                --without-java \
+                --without-ruby \
+                --without-tests \
+                --without-nodejs \
+                --without-python \
+                --with-pic \
+                --without-tests \
+                --prefix={{cache_dir}}
+  args:
+    chdir: '{{third_party_dir}}/{{apachethrift_dir}}'
+    creates: '{{third_party_dir}}/{{apachethrift_dir}}/Makefile'
+
+- name: build apache thrift
+  shell:
+    "/usr/bin/make -j{{ansible_processor_vcpus}} install"
+  args:
+    chdir: '{{third_party_dir}}/{{apachethrift_dir}}'
+    creates: '{{cache_dir}}/bin/thrift'
+
+- name: create thrift aliases
+  file: state=link src={{item.src}} dest={{item.dest}} force=yes
+  with_items:
+    - src: 'libthrift.a'
+      dest: '{{cache_dir}}/lib/libthrift-{{apachethrift_ver}}.a'
+    - src: 'libthriftnb.a'
+      dest: '{{cache_dir}}/lib/libthriftnb-{{apachethrift_ver}}.a'
+    - src: 'libthriftz.a'
+      dest: '{{cache_dir}}/lib/libthriftz-{{apachethrift_ver}}.a'

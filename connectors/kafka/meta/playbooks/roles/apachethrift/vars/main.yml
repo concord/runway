@@ -1,0 +1,6 @@
+---
+apachethrift_ver: '0.9.2'
+apachethrift_dir: 'thrift-{{apachethrift_ver}}'
+apachethrift: 'thrift-{{apachethrift_ver}}.tar.gz'
+apachethrift_bin_name: 'thrift'
+apachethrift_url: 'http://archive.apache.org/dist/thrift/{{apachethrift_ver}}/thrift-{{apachethrift_ver}}.tar.gz'

@@ -6,7 +6,7 @@
 #include <librdkafka/rdkafkacpp.h>
 #include "Random.hpp"
 
-namespace bolt {
+namespace concord {
 class HighLevelKafkaClient : public RdKafka::EventCb {
   public:
   HighLevelKafkaClient(std::map<std::string, std::string> &&defaultOpts,

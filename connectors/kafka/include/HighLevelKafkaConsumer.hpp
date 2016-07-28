@@ -5,8 +5,7 @@
 #include <glog/logging.h>
 #include "HighLevelKafkaClient.hpp"
 
-
-namespace bolt {
+namespace concord {
 struct KafkaConsumerTopicMetadata {
   KafkaConsumerTopicMetadata(const std::string &topicName,
                              const bool fromBegining = false)
@@ -38,7 +37,7 @@ struct KafkaConsumerTopicMetrics {
 // *  (librdkafka's CONFIGURATION.md) group.id, session.timeout.ms,
 // *      partition.assignment.strategy, etc.
 //
-class HighLevelKafkaConsumer : public bolt::HighLevelKafkaClient,
+class HighLevelKafkaConsumer : public concord::HighLevelKafkaClient,
                                public RdKafka::RebalanceCb {
   public:
   HighLevelKafkaConsumer(const std::vector<std::string> &brokers,

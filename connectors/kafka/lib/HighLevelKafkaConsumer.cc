@@ -8,7 +8,7 @@ DEFINE_string(kafka_consumer_debug,
               "metadata,producer,queue,msg,"
               "protocol,cgrp,security,fetch");
 
-namespace bolt {
+namespace concord {
 
 std::ostream &operator<<(std::ostream &o, const KafkaConsumerTopicMetrics &m) {
   o << "Offset: " << m.currentOffset << ", bytesReceived: " << m.bytesReceived
