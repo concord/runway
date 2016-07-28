@@ -42,7 +42,7 @@ class KafkaSource final : public bolt::Computation {
     std::thread([this]() mutable {
       kafkaConsumer_->consume([this](std::unique_ptr<RdKafka::Message> msg) {
         while(!queue_.write(std::move(msg))) {
-          // this thread's job is just to read
+          // this thread's job is just to write
         }
         return kafkaPoll_;
       });
