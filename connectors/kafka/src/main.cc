@@ -9,31 +9,30 @@
 
 #include "HighLevelKafkaConsumer.hpp"
 
-
-DEFINE_string(kafka_brokers, "localhost:9092", "seed kafka brokers");
+DEFINE_string(kafka_brokers, "127.0.0.1:9092", "seed kafka brokers");
 DEFINE_string(kafka_topics, "", "coma delimited list of topics");
-DEFINE_bool(kafka_topics_consume_from_beginning,
-            false,
+DEFINE_bool(kafka_topics_consume_from_beginning, false,
             "should the driver consume from the begining");
 DEFINE_string(kafka_consumer_group_id, "", "name of the consumer group");
 
 namespace concord {
 class KafkaSource final : public bolt::Computation {
-  public:
+public:
   using CtxPtr = bolt::Computation::CtxPtr;
   KafkaSource() {
     std::vector<std::string> brokers;
     folly::split(",", FLAGS_kafka_brokers, brokers);
     folly::split(",", FLAGS_kafka_topics, ostreams_);
     std::vector<concord::KafkaConsumerTopicMetadata> topics;
-    for(auto &s : ostreams_) {
+    for (auto &s : ostreams_) {
       topics.emplace_back(s, FLAGS_kafka_topics_consume_from_beginning);
     }
     std::map<std::string, std::string> opts{};
-    if(!FLAGS_kafka_consumer_group_id.empty()) {
+    if (!FLAGS_kafka_consumer_group_id.empty()) {
       opts.insert({"group.id", FLAGS_kafka_consumer_group_id});
     }
-    kafkaConsumer_.reset(new concord::HighLevelKafkaConsumer(brokers, topics));
+    kafkaConsumer_.reset(
+        new concord::HighLevelKafkaConsumer(brokers, topics, opts));
   }
 
   virtual void init(CtxPtr ctx) override {
@@ -41,7 +40,7 @@ class KafkaSource final : public bolt::Computation {
     LOG_IF(FATAL, FLAGS_kafka_topics.empty()) << "Empty --kafka-topics flag";
     std::thread([this]() mutable {
       kafkaConsumer_->consume([this](std::unique_ptr<RdKafka::Message> msg) {
-        while(!queue_.write(std::move(msg))) {
+        while (!queue_.write(std::move(msg))) {
           // this thread's job is just to write
         }
         return kafkaPoll_;
@@ -56,16 +55,15 @@ class KafkaSource final : public bolt::Computation {
 
   virtual void processRecord(CtxPtr ctx, bolt::FrameworkRecord &&r) override {}
 
-
-  virtual void
-  processTimer(CtxPtr ctx, const std::string &key, int64_t time) override {
+  virtual void processTimer(CtxPtr ctx, const std::string &key,
+                            int64_t time) override {
     ctx->setTimer(key, time); // do it now again :)
     auto size = queue_.sizeGuess();
     LOG_EVERY_N(INFO, 8092) << "queue size: " << size;
     auto maxRecords = std::min(10240lu, size);
     std::unique_ptr<RdKafka::Message> msg{nullptr};
-    while(maxRecords-- > 0) {
-      while(!queue_.read(msg)) {
+    while (maxRecords-- > 0) {
+      while (!queue_.read(msg)) {
         continue;
       }
       ctx->produceRecord(msg->topic_name(), *msg->key(),
@@ -80,7 +78,7 @@ class KafkaSource final : public bolt::Computation {
     return m;
   }
 
-  private:
+private:
   bool kafkaPoll_{true};
   std::vector<std::string> ostreams_{};
   std::unique_ptr<concord::HighLevelKafkaConsumer> kafkaConsumer_{nullptr};
@@ -91,6 +89,7 @@ class KafkaSource final : public bolt::Computation {
 int main(int argc, char *argv[]) {
   gflags::ParseCommandLineFlags(&argc, &argv, true);
   bolt::logging::glog_init(argv[0]);
-  bolt::client::serveComputation(std::make_shared<concord::KafkaSource>(), argc, argv);
+  bolt::client::serveComputation(std::make_shared<concord::KafkaSource>(), argc,
+                                 argv);
   return 0;
 }

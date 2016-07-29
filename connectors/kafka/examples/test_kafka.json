@@ -1,0 +1,9 @@
+{
+  "executable_arguments" : [
+    "--kafka_brokers=localhost:9092",
+    "--kafka_topics=words",
+    "--kafka_topics_consume_from_beginning=true",
+    "--kafka_consumer_group_id=words_group"
+  ],
+  "computation_name" : "kafka-source-1"
+}
