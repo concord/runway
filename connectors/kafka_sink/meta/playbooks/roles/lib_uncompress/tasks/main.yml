@@ -1,0 +1,24 @@
+---
+
+- name: download the package
+  shell:
+    curl -L -o {{third_party_dir}}/{{library_compressed_file}} {{library_url}}
+  args:
+    creates: '{{third_party_dir}}/{{library_compressed_file}}'
+
+- name: Unarchive
+  unarchive:
+    src='{{third_party_dir}}/{{library_compressed_file}}'
+    dest='{{third_party_dir}}'
+    creates='{{third_party_dir}}/{{library_compressed_file_dir}}'
+
+- stat: path='{{third_party_dir}}/{{library_compressed_file_dir}}/.git'
+  register: git_dir
+
+- name: GIT index {{library_compressed_file}}
+  shell:
+    git init . && git add --force .
+  tags: git
+  args:
+    chdir: '{{third_party_dir}}/{{library_compressed_file_dir}}'
+  when: git_dir.stat.isdir is not defined

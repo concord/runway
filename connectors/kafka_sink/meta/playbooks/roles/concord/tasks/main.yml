@@ -1,0 +1,27 @@
+---
+
+- name: Download Concord binary
+  shell: curl -L -o {{third_party_dir}}/{{concord_compressed_file_name}} {{concord_bin_url}}
+  args:
+    creates: '{{third_party_dir}}/{{concord_compressed_file_name}}'
+
+- name: Make temporary dir
+  file: state=directory path='{{cache_dir}}/concord_contents'
+
+- name: Unarchive concord runtime
+  unarchive:
+    src='{{third_party_dir}}/{{concord_compressed_file_name}}'
+    dest='{{cache_dir}}/concord_contents'
+    creates='{{cache_dir}}/concord_contents/usr'
+
+- name: Move concords /usr/local/include
+  command:
+    cp -r '{{cache_dir}}/concord_contents/usr/local/include/concord' '{{cache_dir}}/include'
+
+- name: Move concords /usr/local/lib
+  command:
+    cp '{{cache_dir}}/concord_contents/usr/local/lib/libbolt_cpp_client.so' '{{cache_dir}}/lib'
+
+- name: Remove temporary
+  file: state=absent path='{{cache_dir}}/concord_contents'
+  
