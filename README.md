@@ -7,6 +7,7 @@ will be managed in this README.
 
 - Cassandra Sink
 - Kafka Source
+- Kafka Sink
 
 
 
