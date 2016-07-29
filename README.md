@@ -6,7 +6,7 @@ will be managed in this README.
 ## Connectors
 
 - Cassandra Sink
-
+- Kafka Source
 
 
 
