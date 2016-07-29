@@ -16,7 +16,17 @@
       "docker_repository" : "concord",
       "docker_container" : "runway_kafka_source",
       "supported_versions" : ["0.4.3.1"],
-      "documentation_link" : "https://raw.githubusercontent.com/concord/runway/master/connectors/kafka/README.md",      
+      "documentation_link" : "https://raw.githubusercontent.com/concord/runway/master/connectors/kafka/README.md",
+      "default_cpus" : 1.0,
+      "default_mem" : 1024
+    },
+    {
+      "operator_name" : "Kafka Sink",
+      "executable_name" : "kafka_sink",
+      "docker_repository" : "concord",
+      "docker_container" : "runway_kafka_sink",
+      "supported_versions" : ["0.4.3.1"],
+      "documentation_link" : "https://raw.githubusercontent.com/concord/runway/master/connectors/kafka_sink/README.md",
       "default_cpus" : 1.0,
       "default_mem" : 1024
     }
