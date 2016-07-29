@@ -1,5 +1,15 @@
 ---
 
+- name: Install datastax cassandra driver development dependencies
+  sudo: yes
+  apt:
+    name=libuv-dev
+    state=installed
+    update_cache=yes
+    cache_valid_time=3600
+    force=yes
+
+
 -  git:
     repo='https://github.com/datastax/cpp-driver.git'
     accept_hostkey=yes

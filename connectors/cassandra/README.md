@@ -50,6 +50,20 @@ representing the data it will push to Cassandra, format your JSON like so:
 
 ### Deployment
 
-To deploy your operator simply use the `concord runway` command. This is still in development, please
-check back soon!
+To deploy this operataor simply use the `concord runway` command. You'll need to provide
+a value for `zookeeper_hosts` and `zookeeper_path`, the easiest way to do this is to set
+this via `concord config`. To pass specific operator arguments such as the ones discussed
+above, create a manifest and pass it to `concord runway` using the `-c` option:
 
+```
+{
+  "executable_arguments" : [
+    "--keyspace=test_keyspace",
+	"--table=employees",
+	"--contact_points=127.0.0.1",
+	"--computation_name=my_cassandra_sink",
+	"--max_async_inserts=5"
+  ],
+  "computation_name" : "cassandra-sink-1"
+}
+```
