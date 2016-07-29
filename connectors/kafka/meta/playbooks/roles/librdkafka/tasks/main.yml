@@ -27,7 +27,12 @@
     chdir: '{{third_party_dir}}/librdkafka'
     creates: '{{third_party_dir}}/librdkafka/Makefile.config'
 
-- command: make -j{{ansible_processor_vcpus}} install
+- command: make -j{{ansible_processor_vcpus}}
+  args:
+    chdir: '{{third_party_dir}}/librdkafka'
+    creates: '{{third_party_dir}}/src-cpp/librdkafka++.a'
+
+- command: make install
   args:
     chdir: '{{third_party_dir}}/librdkafka'
     creates: '{{cache_dir}}/lib/librdkafka.a'
