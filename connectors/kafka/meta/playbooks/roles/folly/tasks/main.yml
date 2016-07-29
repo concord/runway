@@ -33,7 +33,7 @@
     repo='https://github.com/facebook/folly.git'
     accept_hostkey=yes
     clone=yes
-    dest='{{cache_dir}}/folly'
+    dest='{{third_party_dir}}/folly'
     update=yes
     recursive=yes
     version='efdf227'
@@ -41,18 +41,18 @@
 
 - command: autoreconf -ivf
   args:
-    chdir: '{{cache_dir}}/folly/folly'
-    creates: '{{cache_dir}}/folly/folly/configure'
+    chdir: '{{third_party_dir}}/folly/folly'
+    creates: '{{third_party_dir}}/folly/folly/configure'
 
 - shell:
     CC=/usr/bin/gcc-5 \
     CXX=/usr/bin/g++-5 \
-    ./configure --with-pic --prefix="{{third_party_dir}}"
+    ./configure --with-pic --prefix="{{cache_dir}}"
   args:
-    chdir: '{{cache_dir}}/folly/folly'
-    creates: '{{cache_dir}}/folly/folly/Makefile'
+    chdir: '{{third_party_dir}}/folly/folly'
+    creates: '{{third_party_dir}}/folly/folly/Makefile'
 
 - command: make -j{{ansible_processor_vcpus}} install
   args:
-    chdir: '{{cache_dir}}/folly/folly'
-    creates: '{{third_party_dir}}/lib/libfolly.a'
+    chdir: '{{third_party_dir}}/folly/folly'
+    creates: '{{cache_dir}}/lib/libfolly.a'

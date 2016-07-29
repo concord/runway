@@ -1,0 +1,4 @@
+---
+concord_ver: '0.4.3.1'
+concord_compressed_file_name: 'concord-{{concord_ver}}.tar.gz'
+concord_bin_url: 'https://storage.googleapis.com/concord-release/concord-{{concord_ver}}-bin.tar.gz'

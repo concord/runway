@@ -5,8 +5,7 @@
 #include <glog/logging.h>
 #include "HighLevelKafkaClient.hpp"
 
-
-namespace bolt {
+namespace concord {
 struct KafkaConsumerTopicMetadata {
   KafkaConsumerTopicMetadata(const std::string &topicName,
                              const bool fromBegining = false)
@@ -38,7 +37,7 @@ struct KafkaConsumerTopicMetrics {
 // *  (librdkafka's CONFIGURATION.md) group.id, session.timeout.ms,
 // *      partition.assignment.strategy, etc.
 //
-class HighLevelKafkaConsumer : public bolt::HighLevelKafkaClient,
+class HighLevelKafkaConsumer : public concord::HighLevelKafkaClient,
                                public RdKafka::RebalanceCb {
   public:
   HighLevelKafkaConsumer(const std::vector<std::string> &brokers,
@@ -52,12 +51,17 @@ class HighLevelKafkaConsumer : public bolt::HighLevelKafkaClient,
   // blocking call
   template <typename Func> void consume(Func fn) {
     bool run = true;
-    while(systemRun_ && run) {
-      auto m = std::unique_ptr<RdKafka::Message>(consumer_->consume(10));
-      switch(m->err()) {
+    while (systemRun_ && run) {
+      auto m = std::unique_ptr<RdKafka::Message>(consumer_->consume(100));
+      switch (m->err()) {
       case RdKafka::ERR__TIMED_OUT:
-        LOG(ERROR) << "Kafka timedout: " << m->errstr();
-        run = false;
+        // This means that the internal timeout of the librdkafka thread
+        // finished and it's giving us the opportunity to react.
+        // This is not useful to our uses of
+        // RdKafka::ConsumerImpl::consume (Topic *topic,
+        //                                 int32_t partition,
+        //                                 int timeout_ms)
+        run = true;
         break;
       case RdKafka::ERR_NO_ERROR:
         resetRetryCount();

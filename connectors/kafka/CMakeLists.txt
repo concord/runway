@@ -3,16 +3,13 @@ project (concord_kafka)
 set(VERSION 0.1.0)
 
 link_directories (
-  ${PROJECT_SOURCE_DIR}/third_party/lib
-  /usr/local/lib
-  /usr/lib/x86_64-linux-gnu
+  ${PROJECT_SOURCE_DIR}/meta/tmp/lib
   )
 
 include_directories (
   SYSTEM
-  ${PROJECT_SOURCE_DIR}/include
-  ${PROJECT_SOURCE_DIR}/third_party/include
-  src
+  ${PROJECT_SOURCE_DIR}/include  
+  ${PROJECT_SOURCE_DIR}/meta/tmp/include
   )
 
 set (BASE_CPP_CLIENT_LIBRARIES
@@ -78,37 +75,15 @@ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -v" )
 join ("${CXX_FLAG_LIST}" " " CMAKE_CXX_FLAGS)
 join ("${BASE_FLAGS}" " " CMAKE_C_FLAGS)
 
-set (KAFKA_SOURCES
-  ${PROJECT_SOURCE_DIR}/lib/HighLevelKafkaConsumer.cc
-  ${PROJECT_SOURCE_DIR}/lib/HighLevelKafkaProducer.cc
-  )
-
-add_library(concord_kafka STATIC
-  ${KAFKA_SOURCES}
-  )
-
 add_executable (
   kafka_source
-  ${PROJECT_SOURCE_DIR}/src/kafka_source.cc
+  ${PROJECT_SOURCE_DIR}/lib/HighLevelKafkaConsumer.cc  
+  ${PROJECT_SOURCE_DIR}/src/main.cc
   )
 target_link_libraries (
   kafka_source
   ${BASE_CPP_CLIENT_LIBRARIES}
-  concord_kafka
-  rdkafka.a
-  rdkafka++.a
-  :libsasl2.so.2.0.25  
-  )
-
-add_executable (
-  kafka_sink
-  ${PROJECT_SOURCE_DIR}/src/kafka_sink.cc
-  )
-target_link_libraries (
-  kafka_sink
-  ${BASE_CPP_CLIENT_LIBRARIES}
-  concord_kafka
-  rdkafka.a
-  rdkafka++.a
+  :librdkafka.a
+  :librdkafka++.a  
   :libsasl2.so.2.0.25  
   )

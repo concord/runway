@@ -6,3 +6,5 @@
     - compilation_tooling
     - folly
     - librdkafka
+    - apachethrift
+    - concord

@@ -1,7 +1,7 @@
 #pragma once
 #include <random>
 
-namespace bolt {
+namespace concord {
 class Random {
   public:
   Random() {
