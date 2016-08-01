@@ -1,4 +1,4 @@
-FROM concord/runtime_executor:0.4.3.1
+FROM concord/runtime_executor:0.4.3.2
 
 RUN apt-get -y install \
     libboost-context1.55.0

@@ -27,7 +27,7 @@ make -j$NPROCS
     
 # Build Dockerfile
 cd $PROJ_ROOT
-sudo docker build -t concord/runway_kafka_source:0.4.3.1 .
-echo "Don't forget to push: sudo docker push concord/runway_kafka_source:0.4.3.1"
+sudo docker build -t concord/runway_kafka_source:0.4.3.2 .
+echo "Don't forget to push: sudo docker push concord/runway_kafka_source:0.4.3.2"
 cd $CUR_DIR
 
