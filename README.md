@@ -1,10 +1,10 @@
 # runway
-Open source operators and templates for the Concord Stream Processor.
+Pre-built operators and templates for Concord.
 
 ## Installation
 
 This repository holds the source code and corresponding metadata for pre-built operators
-that work with the Concord stream processor. To use any of the runway pre-built operators
+that work with Concord. To use any of the runway pre-built operators
 you'll need to invoke the `runway` command via the concord CLI. You can install the 
 concord CLI using pip:
 
@@ -32,7 +32,7 @@ optional arguments:
 
 ## Usage
 
-The runway command will present you with a list of vetted operators to deploy:
+The runway command will present you with a list of pre-built operators to deploy:
 
 ```
 $ concord runway
@@ -52,8 +52,8 @@ After you've made your selection you may then be presented with another list of
 concord runtime versions, if there are multiple for this operator. Be sure to select
 the runtime that matches your scheduler.
 
-Before deploying ensure that you've passed your operator any neccessary configuration
-options, via command line flags, environment variable, etc. To do this you can use
+Before deploying runway operators, make sure that you've passed any neccessary configuration
+options, via command line flags, environment variable, etc. To do this, you can use
 the `-c` option to pass a operator manifest file that runway will use to forward
 to the `deploy` command. For more information on this manifest file and the deploy
 command check out our
@@ -97,9 +97,9 @@ $ concord runway -c kafka_runway_manifest.json
 ```
 
 
-## Publishing a Package
+## Publishing your own runway package
 
-To publish a package, fork the runway repository and include any and all source in 
+To publish a new runway package, fork the runway repository and include any and all source in 
 in a new folder under the `connectors/` directory. Ensure that others can easily build
 run, and package your source code by including a way to replicate the steps you took to
 build (docs, build scripts, etc.). Then Dockerize your connector. Create a Dockerfile
