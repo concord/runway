@@ -33,7 +33,7 @@
 	  "flag_name" : "input_streams",
 	  "double_dash" : true,
 	  "join_char" : "=",
-	  "required" : false
+	  "required" : true
 	},
 	{
 	  "flag_name" : "max_async_inserts",
