@@ -8,7 +8,41 @@
       "supported_versions" : ["0.4.3.2", "0.4.3.1", "0.3.16.4"],
       "documentation_link" : "https://raw.githubusercontent.com/concord/runway/master/connectors/cassandra/README.md",
       "default_cpus" : 1.0,
-      "default_mem" : 1024
+      "default_mem" : 1024,
+      "prompt_args" : [
+	{
+	  "flag_name" : "keyspace",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : true
+	},
+	{
+	  "flag_name" : "table",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : true
+	},
+	{
+	  "flag_name" : "contact_points",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : false,
+	  "default" : "127.0.0.1"
+	},
+	{
+	  "flag_name" : "input_streams",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : false
+	},
+	{
+	  "flag_name" : "max_async_inserts",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : false,
+	  "default" : 10
+	}
+      ]
     },
     {
       "operator_name" : "Kafka Source",
@@ -18,7 +52,35 @@
       "supported_versions" : ["0.4.3.2", "0.4.3.1"],
       "documentation_link" : "https://raw.githubusercontent.com/concord/runway/master/connectors/kafka/README.md",
       "default_cpus" : 1.0,
-      "default_mem" : 1024
+      "default_mem" : 1024,
+      "prompt_args" : [
+	{
+	  "flag_name" : "kafka_brokers",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : false,
+	  "default" : "localhost:9092"
+	},
+	{
+	  "flag_name" : "kafka_topics",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : true
+	},
+	{
+	  "flag_name" : "kafka_topics_consume_from_beginning",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : false,
+	  "default" : false
+	},
+	{
+	  "flag_name" : "kafka_consumer_group_id",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : true
+	}
+      ]
     },
     {
       "operator_name" : "Kafka Sink",
@@ -28,7 +90,28 @@
       "supported_versions" : ["0.4.3.2", "0.4.3.1"],
       "documentation_link" : "https://raw.githubusercontent.com/concord/runway/master/connectors/kafka_sink/README.md",
       "default_cpus" : 1.0,
-      "default_mem" : 1024
+      "default_mem" : 1024,
+      "prompt_args" : [
+	{
+	  "flag_name" : "kafka_brokers",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : false,
+	  "default" : "localhost:9092"
+	},
+	{
+	  "flag_name" : "kafka_topics",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : true
+	},
+	{
+	  "flag_name" : "istreams",
+	  "double_dash" : true,
+	  "join_char" : "=",
+	  "required" : true
+	}
+      ]
     }
   ],
   "schema_version" : "1.0.0"
