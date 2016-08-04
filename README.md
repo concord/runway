@@ -1,10 +1,10 @@
 # runway
-Open source operators and templates for the Concord Stream Processor.
+Pre-built operators and templates for Concord.
 
 ## Installation
 
 This repository holds the source code and corresponding metadata for pre-built operators
-that work with the Concord stream processor. To use any of the runway pre-built operators
+that work with Concord. To use any of the runway pre-built operators
 you'll need to invoke the `runway` command via the concord CLI. You can install the 
 concord CLI using pip:
 
@@ -32,7 +32,7 @@ optional arguments:
 
 ## Usage
 
-The runway command will present you with a list of vetted operators to deploy:
+The runway command will present you with a list of pre-built operators to deploy:
 
 ```
 $ concord runway
@@ -54,7 +54,7 @@ the runtime that matches your scheduler.
 
 If your operator needs additional configuration parameters to run, the runway command
 will request you enter them in, showing you defaults if they are applicable. As an 
-alternative to this you may  pass an operator manifest file that runway will forward
+alternative to this, you may pass an operator manifest file that runway will forward
 to the `deploy` command. For more information on this manifest file and the deploy
 command check out our
 [CLI docs](http://concord.io/docs/tutorials/cli.html#computation-json-manifest). 
@@ -97,9 +97,9 @@ $ concord runway -c kafka_runway_manifest.json
 
 Or without the `-c` flag and just follow the prompts presented.
 
-## Publishing a Package
+## Publishing your own runway package
 
-To publish a package, fork the runway repository and include any and all source in 
+To publish a new runway package, fork the runway repository and include any and all source in 
 in a new folder under the `connectors/` directory. Ensure that others can easily build
 run, and package your source code by including a way to replicate the steps you took to
 build (docs, build scripts, etc.). Then Dockerize your connector. Create a Dockerfile
