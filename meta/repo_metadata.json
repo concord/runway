@@ -19,14 +19,14 @@
 	},
 	{
 	  "flag_name" : "table",
-	  "type" : "string",	  
+	  "type" : "string",
 	  "double_dash" : true,
 	  "join_char" : "=",
 	  "required" : true
 	},
 	{
 	  "flag_name" : "contact_points",
-	  "type" : "string",	  
+	  "type" : "string",
 	  "double_dash" : true,
 	  "join_char" : "=",
 	  "required" : false,
@@ -34,7 +34,7 @@
 	},
 	{
 	  "flag_name" : "input_streams",
-	  "type" : "string",	  
+	  "type" : "string",
 	  "double_dash" : true,
 	  "join_char" : "=",
 	  "required" : true
@@ -69,14 +69,14 @@
 	},
 	{
 	  "flag_name" : "kafka_topics",
-	  "type" : "string",	  
+	  "type" : "string",
 	  "double_dash" : true,
 	  "join_char" : "=",
 	  "required" : true
 	},
 	{
 	  "flag_name" : "kafka_topics_consume_from_beginning",
-	  "type" : "boolean",	  
+	  "type" : "boolean",
 	  "double_dash" : true,
 	  "join_char" : "=",
 	  "required" : false,
@@ -84,7 +84,7 @@
 	},
 	{
 	  "flag_name" : "kafka_consumer_group_id",
-	  "type" : "string",	  
+	  "type" : "string",
 	  "double_dash" : true,
 	  "join_char" : "=",
 	  "required" : true
@@ -111,14 +111,14 @@
 	},
 	{
 	  "flag_name" : "kafka_topics",
-	  "type" : "string",	  
+	  "type" : "string",
 	  "double_dash" : true,
 	  "join_char" : "=",
 	  "required" : true
 	},
 	{
 	  "flag_name" : "istreams",
-	  "type" : "string",	  
+	  "type" : "string",
 	  "double_dash" : true,
 	  "join_char" : "=",
 	  "required" : true
