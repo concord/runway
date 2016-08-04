@@ -52,13 +52,13 @@ After you've made your selection you may then be presented with another list of
 concord runtime versions, if there are multiple for this operator. Be sure to select
 the runtime that matches your scheduler.
 
-Before deploying ensure that you've passed your operator any neccessary configuration
-options, via command line flags, environment variable, etc. To do this you can use
-the `-c` option to pass a operator manifest file that runway will use to forward
+If your operator needs additional configuration parameters to run, the runway command
+will request you enter them in, showing you defaults if they are applicable. As an 
+alternative to this you may  pass an operator manifest file that runway will forward
 to the `deploy` command. For more information on this manifest file and the deploy
 command check out our
 [CLI docs](http://concord.io/docs/tutorials/cli.html#computation-json-manifest). 
-Even if your operator needs no special configuraion parameters you'll still need to
+However, even if your operator needs no special configuraion parameters you'll still need to
 tell the CLI the location of your concord zookeeper quorum and the path it uses to
 store concords metadata. Although you can include this information inside your manifest
 file, runway makes this easy. Currently there are three ways of passing this
@@ -77,9 +77,11 @@ $ concord runway # All zookeeper metadata will be fetched from your config file
 Since your zookeeper address won't change often it makes sense to keep your cluster
 info in your config file, and any operator specific information in seperate files.
 
+From here you can either deploy using a provided manifest file:
 ```
 File: kafka_runway_manifest.json
 {
+  "cpus" : 2.5,
   "executable_arguments" : [
 	"--kafka_brokers=localhost:9092",
 	"--kafka_topics=words",
@@ -88,14 +90,12 @@ File: kafka_runway_manifest.json
   ],
   "computation_name" : "my-kafka-source"
 }
-```
 
-Then deploy like so:
-
-```
+Terminal:
 $ concord runway -c kafka_runway_manifest.json
 ```
 
+Or without the `-c` flag and just follow the prompts presented.
 
 ## Publishing a Package
 
