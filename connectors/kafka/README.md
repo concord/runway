@@ -34,8 +34,9 @@ on a stream named `words`.
 
 To deploy this operator simply use the `concord runway` command. You'll need to provide
 a value for `zookeeper_hosts` and `zookeeper_path`, the easiest way to do this is to set
-this via `concord config`. To pass specific operator arguments such as the ones discussed
-above, create a manifest and pass it to `concord runway` using the `-c` option:
+this via `concord config`. To pass specific operator arguments either follow the terminal
+prompts or create a manifet file with the desired options set and pass the file path to
+the `--config` option of the runway command.
 
 ```
 {
