@@ -69,8 +69,12 @@ information:
 3. **Most convienent:** Use the `concord config` command to store your default zookeeper settings. Use it like so:
 
 ```
+# If you have never initalized the config defaults you'll be prompted for all values...
 $ concord config init
 (...setup defaults, follow prompt)
+# If you already have setup the config file...
+$ concord config set zookeeper_hosts=123.456.789.99:2181
+# Finally...
 $ concord runway # All zookeeper metadata will be fetched from your config file
 ```
 
